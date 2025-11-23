@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Mesa - Sabor Gourmet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        main {
+            flex: 1;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        .navbar {
+            background-color: #d4af37 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #2c3e50 !important;
+            font-size: 1.5rem;
+        }
+        .nav-link {
+            color: #2c3e50 !important;
+            font-weight: 500;
+        }
+        .btn-gold {
+            background-color: #d4af37;
+            border-color: #d4af37;
+            color: #2c3e50;
+        }
+        .btn-gold:hover {
+            background-color: #c39d28;
+            border-color: #c39d28;
+            color: #2c3e50;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .card-header {
+            background-color: #d4af37;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">🍽️ Sabor Gourmet</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/reservas/nueva}">Nueva Reserva</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/reservas/mis-reservas}">Mis Reservas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin}">Administración</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h2 class="card-title mb-0" th:text="${mesa.id != null} ? 'Editar Mesa' : 'Nueva Mesa'"></h2>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="${mesa.id != null} ? @{/admin/mesas/{id}(id=${mesa.id})} : @{/admin/mesas}" 
+                                  th:object="${mesa}" method="post">
+                                
+                                <div class="mb-3">
+                                    <label for="numero" class="form-label">Número de Mesa *</label>
+                                    <input type="number" class="form-control" id="numero" th:field="*{numero}"
+                                           th:class="${#fields.hasErrors('numero')} ? 'form-control is-invalid' : 'form-control'"
+                                           min="1" required>
+                                    <div th:if="${#fields.hasErrors('numero')}" class="invalid-feedback" th:errors="*{numero}"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="capacidad" class="form-label">Capacidad (Personas) *</label>
+                                    <input type="number" class="form-control" id="capacidad" th:field="*{capacidad}"
+                                           th:class="${#fields.hasErrors('capacidad')} ? 'form-control is-invalid' : 'form-control'"
+                                           min="1" max="20" required>
+                                    <div th:if="${#fields.hasErrors('capacidad')}" class="invalid-feedback" th:errors="*{capacidad}"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="activa" th:field="*{activa}">
+                                        <label class="form-check-label" for="activa">
+                                            Mesa Activa
+                                        </label>
+                                    </div>
+                                    <small class="text-muted">Una mesa activa estará disponible para reservas.</small>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-gold btn-lg">
+                                        <span th:if="${mesa.id != null}">Actualizar Mesa</span>
+                                        <span th:if="${mesa.id == null}">Crear Mesa</span>
+                                    </button>
+                                    <a th:href="@{/admin/mesas}" class="btn btn-secondary btn-lg">Cancelar</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2025 Sabor Gourmet - Sistema de Reservas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

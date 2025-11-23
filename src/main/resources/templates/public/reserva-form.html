@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Reserva - Sabor Gourmet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        main {
+            flex: 1;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        .navbar {
+            background-color: #d4af37 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #2c3e50 !important;
+            font-size: 1.5rem;
+        }
+        .nav-link {
+            color: #2c3e50 !important;
+            font-weight: 500;
+        }
+        .btn-gold {
+            background-color: #d4af37;
+            border-color: #d4af37;
+            color: #2c3e50;
+        }
+        .btn-gold:hover {
+            background-color: #c39d28;
+            border-color: #c39d28;
+            color: #2c3e50;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .card-header {
+            background-color: #d4af37;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">🍽️ Sabor Gourmet</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/reservas/nueva}">Nueva Reserva</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/reservas/mis-reservas}">Mis Reservas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin}">Administración</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h2 class="card-title mb-0">Realizar una Nueva Reserva</h2>
+                        </div>
+                        <div class="card-body">
+                            <!-- Mensaje de error general -->
+                            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Error:</strong> <span th:text="${error}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+
+                            <form th:action="@{/reservas}" th:object="${reservaForm}" method="post">
+                                <!-- Datos del Cliente -->
+                                <fieldset class="mb-4">
+                                    <legend class="h5 mb-3 text-muted">Datos del Cliente</legend>
+
+                                    <div class="mb-3">
+                                        <label for="nombreCliente" class="form-label">Nombre Completo *</label>
+                                        <input type="text" class="form-control" id="nombreCliente" th:field="*{nombreCliente}" 
+                                               th:class="${#fields.hasErrors('nombreCliente')} ? 'form-control is-invalid' : 'form-control'">
+                                        <div th:if="${#fields.hasErrors('nombreCliente')}" class="error" th:errors="*{nombreCliente}"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="emailCliente" class="form-label">Email *</label>
+                                        <input type="email" class="form-control" id="emailCliente" th:field="*{emailCliente}"
+                                               th:class="${#fields.hasErrors('emailCliente')} ? 'form-control is-invalid' : 'form-control'">
+                                        <div th:if="${#fields.hasErrors('emailCliente')}" class="error" th:errors="*{emailCliente}"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="telefonoCliente" class="form-label">Teléfono *</label>
+                                        <input type="tel" class="form-control" id="telefonoCliente" th:field="*{telefonoCliente}"
+                                               th:class="${#fields.hasErrors('telefonoCliente')} ? 'form-control is-invalid' : 'form-control'"
+                                               placeholder="Ej: 912345678">
+                                        <div th:if="${#fields.hasErrors('telefonoCliente')}" class="error" th:errors="*{telefonoCliente}"></div>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Datos de la Reserva -->
+                                <fieldset class="mb-4">
+                                    <legend class="h5 mb-3 text-muted">Detalles de la Reserva</legend>
+
+                                    <div class="mb-3">
+                                        <label for="fecha" class="form-label">Fecha *</label>
+                                        <input type="date" class="form-control" id="fecha" th:field="*{fecha}"
+                                               th:class="${#fields.hasErrors('fecha')} ? 'form-control is-invalid' : 'form-control'">
+                                        <div th:if="${#fields.hasErrors('fecha')}" class="error" th:errors="*{fecha}"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="hora" class="form-label">Hora *</label>
+                                        <input type="time" class="form-control" id="hora" th:field="*{hora}"
+                                               th:class="${#fields.hasErrors('hora')} ? 'form-control is-invalid' : 'form-control'">
+                                        <div th:if="${#fields.hasErrors('hora')}" class="error" th:errors="*{hora}"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="numeroPersonas" class="form-label">Número de Personas *</label>
+                                        <input type="number" class="form-control" id="numeroPersonas" th:field="*{numeroPersonas}"
+                                               min="1" max="20"
+                                               th:class="${#fields.hasErrors('numeroPersonas')} ? 'form-control is-invalid' : 'form-control'">
+                                        <div th:if="${#fields.hasErrors('numeroPersonas')}" class="error" th:errors="*{numeroPersonas}"></div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="mesaId" class="form-label">Mesa *</label>
+                                        <select class="form-select" id="mesaId" th:field="*{mesaId}"
+                                                th:class="${#fields.hasErrors('mesaId')} ? 'form-select is-invalid' : 'form-select'">
+                                            <option value="">-- Seleccione una mesa --</option>
+                                            <option th:each="mesa : ${mesas}" th:value="${mesa.id}" 
+                                                    th:text="|Mesa ${mesa.numero} (Capacidad: ${mesa.capacidad})|">
+                                            </option>
+                                        </select>
+                                        <div th:if="${#fields.hasErrors('mesaId')}" class="error" th:errors="*{mesaId}"></div>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Botones -->
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-gold btn-lg">Confirmar Reserva</button>
+                                    <a th:href="@{/}" class="btn btn-secondary btn-lg">Cancelar</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2025 Sabor Gourmet - Sistema de Reservas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
